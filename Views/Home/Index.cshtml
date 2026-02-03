@@ -1,0 +1,185 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<div class="jumbotron text-center animate-fade-in">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold mb-4">Discover Cultural Experiences</h1>
+        <p class="lead col-lg-8 mx-auto mb-5">
+            Explore concerts, plays, exhibitions, workshops, and more. 
+            Book your tickets and be part of something extraordinary.
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a class="btn btn-light btn-lg" asp-controller="Event" asp-action="Index">
+                <i class="fas fa-calendar-alt"></i> Browse Events
+            </a>
+            <a class="btn btn-outline-light btn-lg" asp-controller="Event" asp-action="Search">
+                <i class="fas fa-search"></i> Search Events
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="stats-card">
+            <i class="fas fa-calendar-check text-primary"></i>
+            <h3 class="mb-2">@ViewBag.TotalEvents</h3>
+            <p>Amazing Events</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <i class="fas fa-users text-success"></i>
+            <h3 class="mb-2">@ViewBag.TotalMembers+</h3>
+            <p>Happy Members</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <i class="fas fa-map-marker-alt" style="color: var(--accent-color)"></i>
+            <h3 class="mb-2">@ViewBag.TotalVenues</h3>
+            <p>Unique Venues</p>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Events Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex align-items-center justify-content-between">
+            <h2 class="mb-0">
+                <i class="fas fa-fire text-warning me-2"></i>Upcoming Events
+            </h2>
+            <a asp-controller="Event" asp-action="Index" class="btn btn-outline-primary">
+                View All <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <p class="text-muted mt-2">Don't miss out on these amazing cultural experiences</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    @if (ViewBag.UpcomingEvents != null && ViewBag.UpcomingEvents.Count > 0)
+    {
+        @foreach (var evt in ViewBag.UpcomingEvents as List<Event>)
+        {
+            <div class="col-lg-4 col-md-6">
+                <div class="card event-card">
+                    @if (!string.IsNullOrEmpty(evt.ImageURL))
+                    {
+                        <img src="@evt.ImageURL" class="card-img-top" alt="@evt.EventName">
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-calendar-day fa-3x text-white opacity-75"></i>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <div class="d-flex gap-2 mb-3">
+                            <span class="badge bg-info">@evt.Category.CategoryName</span>
+                            @if (evt.IsSoldOut)
+                            {
+                                <span class="badge bg-danger">Sold Out</span>
+                            }
+                            else if (evt.AvailableSeats < 10)
+                            {
+                                <span class="badge bg-warning text-dark">Few Seats Left</span>
+                            }
+                        </div>
+                        
+                        <h5 class="card-title mb-3">@evt.EventName</h5>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar text-primary me-2" style="width: 20px"></i>
+                                <span class="text-secondary">@evt.EventDate.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-clock text-primary me-2" style="width: 20px"></i>
+                                <span class="text-secondary">@DateTime.Today.Add(evt.StartTime).ToString("hh:mm tt")</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt text-primary me-2" style="width: 20px"></i>
+                                <span class="text-secondary">@evt.Venue.VenueName, @evt.Venue.City</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                            <div>
+                                <div class="text-primary fw-bold fs-4">$@evt.TicketPrice</div>
+                                <small class="text-muted">
+                                    <i class="fas fa-chair"></i> @evt.AvailableSeats/@evt.TotalSeats seats
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-controller="Event" asp-action="Details" asp-route-id="@evt.EventID"
+                           class="btn btn-primary w-100">
+                            View Details <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info d-flex align-items-center">
+                <i class="fas fa-info-circle me-3"></i>
+                <div>
+                    <strong>No upcoming events at this time.</strong> Check back soon for exciting new events!
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Call to Action -->
+<div class="row g-4 mt-5">
+    <div class="col-md-6">
+        <div class="card bg-gradient-primary text-white border-0 h-100">
+            <div class="card-body text-center p-5">
+                <div class="mb-4">
+                    <i class="fas fa-user-plus fa-4x opacity-75"></i>
+                </div>
+                <h3 class="mb-3 fw-bold">Become a Member</h3>
+                <p class="mb-4 opacity-90">Join our community to book tickets, write reviews, and get personalized event recommendations!</p>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg">
+                    Sign Up Free <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-gradient-accent text-white border-0 h-100">
+            <div class="card-body text-center p-5">
+                <div class="mb-4">
+                    <i class="fas fa-search fa-4x opacity-75"></i>
+                </div>
+                <h3 class="mb-3 fw-bold">Find Your Event</h3>
+                <p class="mb-4 opacity-90">Search through our extensive catalog of cultural events by category, date, location, and more.</p>
+                <a asp-controller="Event" asp-action="Search" class="btn btn-light btn-lg">
+                    Advanced Search <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .event-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-8px);
+        }
+    </style>
+}

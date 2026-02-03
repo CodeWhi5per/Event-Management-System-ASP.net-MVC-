@@ -1,0 +1,140 @@
+﻿﻿@{
+    ViewData["Title"] = "Book Event";
+    var eventItem = ViewBag.Event as Event;
+    var maxQuantity = ViewBag.MaxQuantity as int?;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold mb-4">
+                        <i class="fas fa-ticket-alt text-primary me-2"></i>Book Your Tickets
+                    </h2>
+
+                    <!-- Event Summary -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h4 class="mb-3">@eventItem?.EventName</h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <strong>@eventItem?.EventDate.ToString("MMMM dd, yyyy")</strong>
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-clock text-primary me-2"></i>
+                                        @(eventItem != null ? DateTime.Today.Add(eventItem.StartTime).ToString("hh:mm tt") : "")
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                        <strong>@eventItem?.Venue?.VenueName</strong>
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-dollar-sign text-success me-2"></i>
+                                        <strong class="text-success">$@eventItem?.TicketPrice.ToString("F2")</strong> per ticket
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <!-- Booking Form -->
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" name="eventId" value="@eventItem?.EventID" />
+
+                        <div class="mb-4">
+                            <label for="quantity" class="form-label">
+                                <i class="fas fa-users me-1"></i> Number of Tickets
+                            </label>
+                            <input type="number" id="quantity" name="quantity" class="form-control" 
+                                   min="1" max="@maxQuantity" value="1" required />
+                            <small class="text-muted">
+                                Maximum @maxQuantity tickets per booking (@eventItem?.AvailableSeats available)
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="seatType" class="form-label">
+                                <i class="fas fa-chair me-1"></i> Seat Type
+                            </label>
+                            <select id="seatType" name="seatType" class="form-select" required>
+                                <option value="Standard">Standard - $@eventItem?.TicketPrice.ToString("F2")</option>
+                                <option value="Premium">Premium - $@((eventItem?.TicketPrice ?? 0) * 1.5m).ToString("F2")</option>
+                                <option value="VIP">VIP - $@((eventItem?.TicketPrice ?? 0) * 2.0m).ToString("F2")</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Summary -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h5 class="mb-3">Price Summary</h5>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Ticket Price:</span>
+                                    <span id="unitPrice">$@eventItem?.TicketPrice.ToString("F2")</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Quantity:</span>
+                                    <span id="quantityDisplay">1</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Total Amount:</strong>
+                                    <strong class="text-success" id="totalAmount">$@eventItem?.TicketPrice.ToString("F2")</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check-circle me-2"></i>Confirm Booking
+                            </button>
+                            <a asp-action="Details" asp-route-id="@eventItem?.EventID" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Event
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const basePrice = @eventItem?.TicketPrice ?? 0;
+        const quantityInput = document.getElementById('quantity');
+        const seatTypeSelect = document.getElementById('seatType');
+        
+        function updatePrice() {
+            const quantity = parseInt(quantityInput.value) || 1;
+            const seatType = seatTypeSelect.value;
+            
+            let multiplier = 1;
+            if (seatType === 'Premium') multiplier = 1.5;
+            else if (seatType === 'VIP') multiplier = 2.0;
+            
+            const unitPrice = basePrice * multiplier;
+            const totalAmount = unitPrice * quantity;
+            
+            document.getElementById('unitPrice').textContent = '$' + unitPrice.toFixed(2);
+            document.getElementById('quantityDisplay').textContent = quantity;
+            document.getElementById('totalAmount').textContent = '$' + totalAmount.toFixed(2);
+        }
+        
+        quantityInput.addEventListener('input', updatePrice);
+        seatTypeSelect.addEventListener('change', updatePrice);
+    </script>
+}

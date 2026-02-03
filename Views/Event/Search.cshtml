@@ -1,0 +1,137 @@
+﻿@model EventSearchViewModel
+@{
+    ViewData["Title"] = "Search Events";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">Search Events</h2>
+                        <p class="text-muted">Find the perfect event for you</p>
+                    </div>
+
+                    <form asp-action="Search" method="post">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CategoryID" class="form-label">
+                                    <i class="fas fa-filter me-1"></i> Category
+                                </label>
+                                <select asp-for="CategoryID" class="form-select">
+                                    <option value="">All Categories</option>
+                                    @if (Model?.Categories != null)
+                                    {
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            <option value="@category.CategoryID">@category.CategoryName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="City" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-1"></i> Location (City)
+                                </label>
+                                <input asp-for="City" class="form-control" 
+                                       placeholder="Enter city name..." />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DateFrom" class="form-label">
+                                    <i class="fas fa-calendar me-1"></i> Date From
+                                </label>
+                                <input asp-for="DateFrom" class="form-control" type="date" />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DateTo" class="form-label">
+                                    <i class="fas fa-calendar me-1"></i> Date To
+                                </label>
+                                <input asp-for="DateTo" class="form-control" type="date" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MaxPrice" class="form-label">
+                                    <i class="fas fa-dollar-sign me-1"></i> Max Price
+                                </label>
+                                <input asp-for="MaxPrice" class="form-control" type="number" 
+                                       step="0.01" placeholder="0.00" />
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>Search Events
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-list me-2"></i>View All Events
+                            </a>
+                        </div>
+                    </form>
+
+                    @if (Model?.Results != null && Model.Results.Any())
+                    {
+                        <hr class="my-4">
+                        <h4 class="mb-3">Search Results (@Model.Results.Count events found)</h4>
+                        
+                        <div class="row g-3">
+                            @foreach (var evt in Model.Results)
+                            {
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h5 class="card-title mb-2">@evt.EventName</h5>
+                                                    <div class="mb-2">
+                                                        <span class="badge bg-info">@evt.Category.CategoryName</span>
+                                                        @if (evt.IsSoldOut)
+                                                        {
+                                                            <span class="badge bg-danger">Sold Out</span>
+                                                        }
+                                                    </div>
+                                                    <p class="text-muted mb-2">
+                                                        <i class="fas fa-calendar me-1"></i> @evt.EventDate.ToString("MMM dd, yyyy")
+                                                        <i class="fas fa-map-marker-alt ms-3 me-1"></i> @evt.Venue?.VenueName
+                                                    </p>
+                                                    <p class="fw-bold text-success mb-0">
+                                                        $@evt.TicketPrice.ToString("F2")
+                                                    </p>
+                                                </div>
+                                                <div class="ms-3">
+                                                    <a asp-action="Details" asp-route-id="@evt.EventID" 
+                                                       class="btn btn-primary">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (Model?.Results != null && !Model.Results.Any())
+                    {
+                        <hr class="my-4">
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No events found matching your search criteria.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

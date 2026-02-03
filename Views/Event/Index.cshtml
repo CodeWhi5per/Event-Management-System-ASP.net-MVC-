@@ -1,0 +1,140 @@
+﻿@model List<Event>
+@{
+    ViewData["Title"] = "Events";
+}
+
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold mb-2">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>Upcoming Events
+            </h1>
+            <p class="text-muted">Discover and book amazing cultural experiences</p>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label"><i class="fas fa-filter me-1"></i> Category</label>
+                    <select name="categoryId" class="form-select">
+                        <option value="">All Categories</option>
+                        @if (ViewBag.Categories != null)
+                        {
+                            @foreach (var category in ViewBag.Categories as List<Category>)
+                            {
+                                <option value="@category.CategoryID" 
+                                        selected="@(ViewBag.SelectedCategory == category.CategoryID)">
+                                    @category.CategoryName
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-map-marker-alt me-1"></i> Location</label>
+                    <input type="text" name="city" value="@ViewBag.City" 
+                           class="form-control" placeholder="Search by city..." />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Events Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var evt in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="card event-card h-100">
+                        @if (!string.IsNullOrEmpty(evt.ImageURL))
+                        {
+                            <img src="@evt.ImageURL" class="card-img-top" alt="@evt.EventName">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-calendar-day fa-3x text-white opacity-75"></i>
+                            </div>
+                        }
+                        
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="badge bg-info">@evt.Category.CategoryName</span>
+                                @if (evt.IsSoldOut)
+                                {
+                                    <span class="badge bg-danger">Sold Out</span>
+                                }
+                                else if (evt.AvailableSeats < 10)
+                                {
+                                    <span class="badge bg-warning text-dark">Few Seats Left</span>
+                                }
+                            </div>
+                            
+                            <h5 class="card-title mb-3">@evt.EventName</h5>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-calendar text-primary me-2" style="width: 20px"></i>
+                                    <span class="text-secondary">@evt.EventDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-clock text-primary me-2" style="width: 20px"></i>
+                                    <span class="text-secondary">@DateTime.Today.Add(evt.StartTime).ToString("hh:mm tt") - @DateTime.Today.Add(evt.EndTime).ToString("hh:mm tt")</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-map-marker-alt text-primary me-2" style="width: 20px"></i>
+                                    <span class="text-secondary">@evt.Venue?.VenueName</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-ticket-alt text-success me-2" style="width: 20px"></i>
+                                    <span class="fw-bold text-success">$@evt.TicketPrice.ToString("F2")</span>
+                                    <small class="text-muted ms-2">(@evt.AvailableSeats seats left)</small>
+                                </div>
+                            </div>
+                            
+                            @if (!string.IsNullOrEmpty(evt.Description) && evt.Description.Length > 100)
+                            {
+                                <p class="card-text text-muted mb-3">@evt.Description.Substring(0, 100)...</p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted mb-3">@evt.Description</p>
+                            }
+                            
+                            <div class="mt-auto d-flex gap-2">
+                                <a asp-action="Details" asp-route-id="@evt.EventID" class="btn btn-outline-primary flex-fill">
+                                    <i class="fas fa-info-circle me-1"></i> Details
+                                </a>
+                                @if (!evt.IsSoldOut)
+                                {
+                                    <a asp-controller="Booking" asp-action="Create" asp-route-id="@evt.EventID" 
+                                       class="btn btn-primary flex-fill">
+                                        <i class="fas fa-ticket-alt me-1"></i> Book Now
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-info-circle fa-3x mb-3"></i>
+            <h4>No events found</h4>
+            <p class="mb-0">Try adjusting your search filters or check back later for new events.</p>
+        </div>
+    }
+</div>

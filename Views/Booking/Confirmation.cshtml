@@ -1,0 +1,124 @@
+﻿@model Booking
+@{
+    ViewData["Title"] = "Booking Confirmation";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Success Message -->
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                </div>
+                <h1 class="display-5 fw-bold text-success mb-2">Booking Confirmed!</h1>
+                <p class="lead text-muted">Your tickets have been successfully booked</p>
+            </div>
+
+            <!-- Booking Details Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Booking Details</h4>
+                        <span class="badge bg-success px-3 py-2">@Model.Status</span>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-1">Booking Reference</p>
+                            <h5 class="mb-0">@Model.BookingReference</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-muted mb-1">Booking Date</p>
+                            <h5 class="mb-0">@Model.BookingDate.ToString("MMM dd, yyyy")</h5>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3">
+                        <i class="fas fa-calendar-alt text-primary me-2"></i>Event Information
+                    </h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h4 class="mb-3">@Model.Event.EventName</h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <strong>@Model.Event.EventDate.ToString("MMMM dd, yyyy")</strong>
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="fas fa-clock text-primary me-2"></i>
+                                        @DateTime.Today.Add(Model.Event.StartTime).ToString("hh:mm tt") - @DateTime.Today.Add(Model.Event.EndTime).ToString("hh:mm tt")
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                        <strong>@Model.Event.Venue.VenueName</strong>
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-location-dot text-primary me-2"></i>
+                                        @Model.Event.Venue.Address
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3">
+                        <i class="fas fa-ticket-alt text-primary me-2"></i>Ticket Details
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Seat Type</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detail in Model.BookingDetails)
+                                {
+                                    <tr>
+                                        <td>@detail.SeatType</td>
+                                        <td>@detail.Quantity</td>
+                                        <td>$@detail.UnitPrice.ToString("F2")</td>
+                                        <td class="text-end">$@detail.Subtotal.ToString("F2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <th colspan="3" class="text-end">Total Amount:</th>
+                                    <th class="text-end text-success">$@Model.TotalAmount.ToString("F2")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Important:</strong> Please save your booking reference number for future reference. 
+                        You can view this booking anytime in your booking history.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a asp-action="History" class="btn btn-primary btn-lg">
+                    <i class="fas fa-list me-2"></i>View All Bookings
+                </a>
+                <a asp-controller="Event" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-calendar-alt me-2"></i>Browse More Events
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

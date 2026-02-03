@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Error";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3>Error</h3>
+                </div>
+                <div class="card-body">
+                    <h4>An error occurred while processing your request.</h4>
+                    <div class="alert alert-warning mt-3">
+                        <p class="mb-0">
+                            Please try again or contact support if the problem persists.
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                            Return to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

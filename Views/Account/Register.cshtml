@@ -1,0 +1,131 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">Create Account</h2>
+                        <p class="text-muted">Join our cultural community today</p>
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Register" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label">
+                                    <i class="fas fa-user me-1"></i> First Name
+                                </label>
+                                <input asp-for="FirstName" class="form-control" placeholder="John" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label">
+                                    <i class="fas fa-user me-1"></i> Last Name
+                                </label>
+                                <input asp-for="LastName" class="form-control" placeholder="Doe" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="fas fa-envelope me-1"></i> Email Address
+                            </label>
+                            <input asp-for="Email" class="form-control" placeholder="john.doe@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label">
+                                <i class="fas fa-phone me-1"></i> Phone Number
+                            </label>
+                            <input asp-for="Phone" class="form-control" placeholder="+1 (555) 123-4567" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label">
+                                    <i class="fas fa-lock me-1"></i> Password
+                                </label>
+                                <input asp-for="Password" class="form-control" placeholder="Enter password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label">
+                                    <i class="fas fa-lock me-1"></i> Confirm Password
+                                </label>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @if (Model?.AvailableCategories != null && Model.AvailableCategories.Any())
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-heart me-1"></i> Event Preferences (Optional)
+                                </label>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            @foreach (var category in Model.AvailableCategories)
+                                            {
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" 
+                                                               name="SelectedCategories" value="@category.CategoryID" 
+                                                               id="category_@category.CategoryID">
+                                                        <label class="form-check-label" for="category_@category.CategoryID">
+                                                            @category.CategoryName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Select your favorite event types to receive personalized recommendations</small>
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i> Create Account
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? 
+                            <a asp-action="Login" class="text-decoration-none fw-bold">
+                                Login here <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

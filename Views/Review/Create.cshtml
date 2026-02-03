@@ -1,0 +1,93 @@
+﻿@model Review
+@{
+    ViewData["Title"] = "Write Review";
+    var eventItem = ViewBag.Event as Event;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                        <h2 class="fw-bold">Write a Review</h2>
+                        <p class="text-muted">Share your experience with others</p>
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <!-- Event Info -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-2">@eventItem?.EventName</h5>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-calendar me-2"></i>@eventItem?.EventDate.ToString("MMM dd, yyyy")
+                                <i class="fas fa-map-marker-alt ms-3 me-2"></i>@eventItem?.Venue?.VenueName
+                            </p>
+                        </div>
+                    </div>
+
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" asp-for="EventID" />
+
+                        <div class="mb-4">
+                            <label asp-for="Rating" class="form-label">
+                                <i class="fas fa-star me-1"></i> Rating
+                            </label>
+                            <div class="rating-input">
+                                <div class="btn-group w-100" role="group">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        var currentRating = i;
+                                        <input type="radio" class="btn-check" name="Rating" id="rating@i" 
+                                               value="@i" required>
+                                        <label class="btn btn-outline-warning" for="rating@i">
+                                            @i <i class="fas fa-star"></i>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Comment" class="form-label">
+                                <i class="fas fa-comment me-1"></i> Your Review
+                            </label>
+                            <textarea asp-for="Comment" class="form-control" rows="6" 
+                                      placeholder="Tell us about your experience..."></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                            <small class="text-muted">Share your honest feedback to help others make informed decisions</small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> Your review will be published after approval by our team.
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Review
+                            </button>
+                            <a asp-controller="Event" asp-action="Details" asp-route-id="@Model.EventID" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Event
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

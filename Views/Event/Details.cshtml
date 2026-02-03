@@ -1,0 +1,219 @@
+﻿@using System.Linq
+@model Event
+@{
+    ViewData["Title"] = Model.EventName;
+    var averageRating = ViewBag.AverageRating as double?;
+}
+
+<div class="container py-4">
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Events
+        </a>
+    </div>
+
+    <!-- Event Details Card -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img src="@Model.ImageURL" class="card-img-top" alt="@Model.EventName">
+                }
+                else
+                {
+                    <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 400px;">
+                        <i class="fas fa-calendar-day fa-5x text-white opacity-75"></i>
+                    </div>
+                }
+                
+                <div class="card-body p-4">
+                    <div class="d-flex gap-2 mb-3">
+                        <span class="badge bg-info">@Model.Category.CategoryName</span>
+                        <span class="badge bg-secondary">@Model.Status</span>
+                        @if (Model.IsSoldOut)
+                        {
+                            <span class="badge bg-danger">Sold Out</span>
+                        }
+                        else if (Model.AvailableSeats < 10)
+                        {
+                            <span class="badge bg-warning text-dark">Few Seats Left</span>
+                        }
+                    </div>
+
+                    <h1 class="display-5 fw-bold mb-3">@Model.EventName</h1>
+
+                    @if (Model.Reviews.Any())
+                    {
+                        <div class="mb-3">
+                            <span class="text-warning">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < Math.Floor(averageRating ?? 0))
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else if (i < Math.Ceiling(averageRating ?? 0))
+                                    {
+                                        <i class="fas fa-star-half-alt"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star"></i>
+                                    }
+                                }
+                            </span>
+                            <span class="ms-2 text-muted">
+                                @averageRating?.ToString("F1") (@Model.Reviews.Count reviews)
+                            </span>
+                        </div>
+                    }
+
+                    <div class="event-details mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar text-primary me-3 fa-lg"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Date</small>
+                                        <strong>@Model.EventDate.ToString("MMMM dd, yyyy")</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock text-primary me-3 fa-lg"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Time</small>
+                                        <strong>@DateTime.Today.Add(Model.StartTime).ToString("hh:mm tt") - @DateTime.Today.Add(Model.EndTime).ToString("hh:mm tt")</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-map-marker-alt text-primary me-3 fa-lg"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Venue</small>
+                                        <strong>@Model.Venue.VenueName</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users text-primary me-3 fa-lg"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Capacity</small>
+                                        <strong>@Model.TotalSeats seats (@Model.AvailableSeats available)</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h3 class="mb-3">About This Event</h3>
+                    <p class="lead">@Model.Description</p>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            @if (Model.Reviews.Any())
+            {
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h3 class="mb-4">
+                            <i class="fas fa-star text-warning me-2"></i>Reviews
+                        </h3>
+                        @{
+                            var reviewsList = Model.Reviews.ToList();
+                            var sortedReviews = reviewsList.OrderByDescending(r => r.ReviewDate);
+                        }
+                        @foreach (var review in sortedReviews)
+                        {
+                            <div class="review-item mb-3 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <strong>@review.Member.FirstName @review.Member.LastName</strong>
+                                        <div class="text-warning">
+                                            @for (int i = 0; i < 5; i++)
+                                            {
+                                                if (i < review.Rating)
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">@review.ReviewDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                                <p class="mb-0">@review.Comment</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Booking Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-3">
+                        <span class="text-success fw-bold">$@Model.TicketPrice.ToString("F2")</span>
+                        <small class="text-muted d-block fs-6">per ticket</small>
+                    </h3>
+
+                    @if (Model.IsSoldOut)
+                    {
+                        <div class="alert alert-danger text-center">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <strong>Sold Out</strong>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-grid gap-2 mb-3">
+                            <a asp-controller="Booking" asp-action="Create" asp-route-id="@Model.EventID" 
+                               class="btn btn-primary btn-lg">
+                                <i class="fas fa-ticket-alt me-2"></i>Book Now
+                            </a>
+                        </div>
+
+                        @if (Model.AvailableSeats < 20)
+                        {
+                            <div class="alert alert-warning text-center mb-0">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Only <strong>@Model.AvailableSeats seats</strong> left!
+                            </div>
+                        }
+                    }
+
+                    <hr class="my-3">
+
+                    <h5 class="mb-3">Venue Information</h5>
+                    <p class="mb-2">
+                        <i class="fas fa-building text-muted me-2"></i>
+                        <strong>@Model.Venue.VenueName</strong>
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                        @Model.Venue.Address
+                    </p>
+                    @if (!string.IsNullOrEmpty(Model.Venue.City))
+                    {
+                        <p class="mb-0">
+                            <i class="fas fa-city text-muted me-2"></i>
+                            @Model.Venue.City
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

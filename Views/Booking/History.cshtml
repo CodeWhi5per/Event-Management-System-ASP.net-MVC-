@@ -1,0 +1,123 @@
+﻿@model List<Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold mb-2">
+                <i class="fas fa-ticket-alt text-primary me-2"></i>My Bookings
+            </h1>
+            <p class="text-muted">View and manage your event bookings</p>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var booking in Model)
+            {
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h4 class="mb-2">@booking.Event.EventName</h4>
+                                            <div class="d-flex gap-2 mb-2">
+                                                <span class="badge bg-info">@booking.Event.Category.CategoryName</span>
+                                                @if (booking.Status == "Confirmed")
+                                                {
+                                                    <span class="badge bg-success">@booking.Status</span>
+                                                }
+                                                else if (booking.Status == "Cancelled")
+                                                {
+                                                    <span class="badge bg-danger">@booking.Status</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">@booking.Status</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <p class="mb-2">
+                                                <i class="fas fa-calendar text-muted me-2"></i>
+                                                <strong>Event Date:</strong> @booking.Event.EventDate.ToString("MMM dd, yyyy")
+                                            </p>
+                                            <p class="mb-2">
+                                                <i class="fas fa-clock text-muted me-2"></i>
+                                                <strong>Time:</strong> @DateTime.Today.Add(booking.Event.StartTime).ToString("hh:mm tt")
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-2">
+                                                <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                                <strong>Venue:</strong> @booking.Event.Venue?.VenueName
+                                            </p>
+                                            <p class="mb-2">
+                                                <i class="fas fa-receipt text-muted me-2"></i>
+                                                <strong>Reference:</strong> @booking.BookingReference
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-calendar-check text-muted me-2"></i>
+                                        <small>Booked on @booking.BookingDate.ToString("MMM dd, yyyy")</small>
+                                    </p>
+                                </div>
+
+                                <div class="col-lg-4 border-start">
+                                    <div class="h-100 d-flex flex-column justify-content-between">
+                                        <div class="mb-3">
+                                            <p class="text-muted mb-1">Total Tickets</p>
+                                            <h3 class="mb-0">@booking.TotalTickets</h3>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <p class="text-muted mb-1">Total Amount</p>
+                                            <h3 class="text-success mb-0">$@booking.TotalAmount.ToString("F2")</h3>
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <a asp-action="Confirmation" asp-route-id="@booking.BookingID" 
+                                               class="btn btn-outline-primary">
+                                                <i class="fas fa-eye me-2"></i>View Details
+                                            </a>
+                                            @if (booking.Status == "Confirmed" && booking.Event.EventDate > DateTime.Today)
+                                            {
+                                                <a asp-controller="Review" asp-action="Create" asp-route-id="@booking.EventID" 
+                                                   class="btn btn-outline-secondary">
+                                                    <i class="fas fa-star me-2"></i>Write Review
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-ticket-alt fa-4x text-muted mb-4"></i>
+                <h4 class="mb-3">No Bookings Yet</h4>
+                <p class="text-muted mb-4">You haven't made any bookings yet. Start exploring our events!</p>
+                <a asp-controller="Event" asp-action="Index" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-alt me-2"></i>Browse Events
+                </a>
+            </div>
+        </div>
+    }
+</div>
