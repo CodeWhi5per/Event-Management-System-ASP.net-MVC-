@@ -1,6 +1,8 @@
 ﻿@model List<Event>
 @{
     ViewData["Title"] = "Events";
+    var memberName = Context.Session.GetString("MemberName");
+    var isLoggedIn = !string.IsNullOrEmpty(memberName);
 }
 
 <div class="container py-4">
@@ -74,7 +76,7 @@
                                 {
                                     <span class="badge bg-danger">Sold Out</span>
                                 }
-                                else if (evt.AvailableSeats < 10)
+                                else if (isLoggedIn && evt.AvailableSeats < 10)
                                 {
                                     <span class="badge bg-warning text-dark">Few Seats Left</span>
                                 }
@@ -98,7 +100,21 @@
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-ticket-alt text-success me-2" style="width: 20px"></i>
                                     <span class="fw-bold text-success">$@evt.TicketPrice.ToString("F2")</span>
-                                    <small class="text-muted ms-2">(@evt.AvailableSeats seats left)</small>
+                                    @if (isLoggedIn)
+                                    {
+                                        <small class="text-muted ms-2">(@evt.AvailableSeats seats left)</small>
+                                    }
+                                    else
+                                    {
+                                        @if (evt.IsSoldOut)
+                                        {
+                                            <small class="text-danger ms-2 fw-semibold">(Full)</small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-success ms-2 fw-semibold">(Available)</small>
+                                        }
+                                    }
                                 </div>
                             </div>
                             

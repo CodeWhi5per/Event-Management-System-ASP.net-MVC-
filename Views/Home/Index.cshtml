@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Home";
+    var memberName = Context.Session.GetString("MemberName");
+    var isLoggedIn = !string.IsNullOrEmpty(memberName);
 }
 
 <!-- Hero Section -->
@@ -85,7 +87,7 @@
                             {
                                 <span class="badge bg-danger">Sold Out</span>
                             }
-                            else if (evt.AvailableSeats < 10)
+                            else if (isLoggedIn && evt.AvailableSeats < 10)
                             {
                                 <span class="badge bg-warning text-dark">Few Seats Left</span>
                             }
@@ -111,9 +113,26 @@
                         <div class="d-flex align-items-center justify-content-between mt-auto">
                             <div>
                                 <div class="text-primary fw-bold fs-4">$@evt.TicketPrice</div>
-                                <small class="text-muted">
-                                    <i class="fas fa-chair"></i> @evt.AvailableSeats/@evt.TotalSeats seats
-                                </small>
+                                @if (isLoggedIn)
+                                {
+                                    <small class="text-muted">
+                                        <i class="fas fa-chair"></i> @evt.AvailableSeats/@evt.TotalSeats seats
+                                    </small>
+                                }
+                                else
+                                {
+                                    <small class="fw-semibold">
+                                        <i class="fas fa-chair"></i> 
+                                        @if (evt.IsSoldOut)
+                                        {
+                                            <span class="text-danger">Full</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">Available</span>
+                                        }
+                                    </small>
+                                }
                             </div>
                         </div>
                     </div>

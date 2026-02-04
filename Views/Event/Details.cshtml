@@ -1,8 +1,10 @@
-﻿@using System.Linq
+﻿﻿@using System.Linq
 @model Event
 @{
     ViewData["Title"] = Model.EventName;
     var averageRating = ViewBag.AverageRating as double?;
+    var memberName = Context.Session.GetString("MemberName");
+    var isLoggedIn = !string.IsNullOrEmpty(memberName);
 }
 
 <div class="container py-4">
@@ -36,7 +38,7 @@
                         {
                             <span class="badge bg-danger">Sold Out</span>
                         }
-                        else if (Model.AvailableSeats < 10)
+                        else if (isLoggedIn && Model.AvailableSeats < 10)
                         {
                             <span class="badge bg-warning text-dark">Few Seats Left</span>
                         }
@@ -104,7 +106,21 @@
                                     <i class="fas fa-users text-primary me-3 fa-lg"></i>
                                     <div>
                                         <small class="text-muted d-block">Capacity</small>
-                                        <strong>@Model.TotalSeats seats (@Model.AvailableSeats available)</strong>
+                                        @if (isLoggedIn)
+                                        {
+                                            <strong>@Model.TotalSeats seats (@Model.AvailableSeats available)</strong>
+                                        }
+                                        else
+                                        {
+                                            @if (Model.IsSoldOut)
+                                            {
+                                                <strong class="text-danger">Full</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong class="text-success">Available</strong>
+                                            }
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -185,11 +201,24 @@
                             </a>
                         </div>
 
-                        @if (Model.AvailableSeats < 20)
+                        @if (isLoggedIn)
                         {
-                            <div class="alert alert-warning text-center mb-0">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Only <strong>@Model.AvailableSeats seats</strong> left!
+                            @if (Model.AvailableSeats < 20)
+                            {
+                                <div class="alert alert-warning text-center mb-0">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Only <strong>@Model.AvailableSeats seats</strong> left!
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info text-center mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Tickets Available</strong>
+                                <div class="small mt-1">
+                                    <a asp-controller="Account" asp-action="Login" class="alert-link">Login</a> to see seat details
+                                </div>
                             </div>
                         }
                     }
