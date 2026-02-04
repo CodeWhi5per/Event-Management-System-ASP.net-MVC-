@@ -159,33 +159,74 @@
     }
 </div>
 
-<!-- Call to Action -->
+<!-- Call to Action - Enhanced UI -->
 <div class="row g-4 mt-5">
     <div class="col-md-6">
-        <div class="card bg-gradient-primary text-white border-0 h-100">
-            <div class="card-body text-center p-5">
-                <div class="mb-4">
-                    <i class="fas fa-user-plus fa-4x opacity-75"></i>
+        <div class="cta-card cta-card-primary border-0 h-100">
+            <div class="cta-card-overlay"></div>
+            <div class="card-body text-center p-5 position-relative">
+                <div class="cta-icon-wrapper mb-4">
+                    <div class="cta-icon-circle">
+                        <i class="fas fa-user-plus fa-3x"></i>
+                    </div>
+                    <div class="cta-icon-glow"></div>
                 </div>
-                <h3 class="mb-3 fw-bold">Become a Member</h3>
-                <p class="mb-4 opacity-90">Join our community to book tickets, write reviews, and get personalized event recommendations!</p>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg">
-                    Sign Up Free <i class="fas fa-arrow-right ms-2"></i>
+                <h3 class="mb-3 fw-bold text-white">Become a Member</h3>
+                <p class="mb-4 text-white cta-description">Join our community to book tickets, write reviews, and get personalized event recommendations!</p>
+                
+                <div class="cta-benefits mb-4">
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span>Exclusive Event Access</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span>Personalized Recommendations</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span>Priority Booking</span>
+                    </div>
+                </div>
+                
+                <a asp-controller="Account" asp-action="Register" class="btn btn-cta-light btn-lg shadow-lg">
+                    <span>Sign Up Free</span>
+                    <i class="fas fa-arrow-right ms-2"></i>
                 </a>
+                <p class="mt-3 mb-0 small text-white-50">No credit card required • Free forever</p>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card bg-gradient-accent text-white border-0 h-100">
-            <div class="card-body text-center p-5">
-                <div class="mb-4">
-                    <i class="fas fa-search fa-4x opacity-75"></i>
+        <div class="cta-card cta-card-accent border-0 h-100">
+            <div class="cta-card-overlay"></div>
+            <div class="card-body text-center p-5 position-relative">
+                <div class="cta-icon-wrapper mb-4">
+                    <div class="cta-icon-circle">
+                        <i class="fas fa-search fa-3x"></i>
+                    </div>
+                    <div class="cta-icon-glow"></div>
                 </div>
-                <h3 class="mb-3 fw-bold">Find Your Event</h3>
-                <p class="mb-4 opacity-90">Search through our extensive catalog of cultural events by category, date, location, and more.</p>
-                <a asp-controller="Event" asp-action="Search" class="btn btn-light btn-lg">
-                    Advanced Search <i class="fas fa-arrow-right ms-2"></i>
+                <h3 class="mb-3 fw-bold text-white">Find Your Event</h3>
+                <p class="mb-4 text-white cta-description">Search through our extensive catalog of cultural events by category, date, location, and more.</p>
+                
+                <div class="cta-features mb-4">
+                    <div class="feature-tag">
+                        <i class="fas fa-filter me-2"></i>Advanced Filters
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-calendar me-2"></i>Date Range
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-map-marker-alt me-2"></i>Location Search
+                    </div>
+                </div>
+                
+                <a asp-controller="Event" asp-action="Search" class="btn btn-cta-light btn-lg shadow-lg">
+                    <span>Advanced Search</span>
+                    <i class="fas fa-arrow-right ms-2"></i>
                 </a>
+                <p class="mt-3 mb-0 small text-white-50">Find events that match your interests</p>
             </div>
         </div>
     </div>
