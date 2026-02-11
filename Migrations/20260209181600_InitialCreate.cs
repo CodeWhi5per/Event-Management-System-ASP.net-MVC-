@@ -15,11 +15,11 @@ namespace EventManagementSystem.Migrations
                 name: "CATEGORY",
                 columns: table => new
                 {
-                    CategoryID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CategoryName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true)
+                    CategoryID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -30,16 +30,16 @@ namespace EventManagementSystem.Migrations
                 name: "INQUIRY",
                 columns: table => new
                 {
-                    InquiryID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Phone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    Subject = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    InquiryID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Subject = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Message = table.Column<string>(type: "text", nullable: false),
-                    InquiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false, defaultValue: "Pending"),
-                    ResponseDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    InquiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, defaultValue: "Pending"),
+                    ResponseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Response = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -51,15 +51,15 @@ namespace EventManagementSystem.Migrations
                 name: "MEMBER",
                 columns: table => new
                 {
-                    MemberID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    Phone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    JoinDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false, defaultValue: "Active")
+                    MemberID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, defaultValue: "Active")
                 },
                 constraints: table =>
                 {
@@ -70,16 +70,16 @@ namespace EventManagementSystem.Migrations
                 name: "VENUE",
                 columns: table => new
                 {
-                    VenueID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    VenueName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Address = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    City = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    PostalCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true),
-                    Capacity = table.Column<int>(type: "INTEGER", nullable: false),
-                    Facilities = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    ContactPhone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    ContactEmail = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true)
+                    VenueID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VenueName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    Facilities = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ContactPhone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    ContactEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,11 +90,11 @@ namespace EventManagementSystem.Migrations
                 name: "PREFERENCE",
                 columns: table => new
                 {
-                    PreferenceID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MemberID = table.Column<int>(type: "INTEGER", nullable: false),
-                    CategoryID = table.Column<int>(type: "INTEGER", nullable: false),
-                    AddedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    PreferenceID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MemberID = table.Column<int>(type: "int", nullable: false),
+                    CategoryID = table.Column<int>(type: "int", nullable: false),
+                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,21 +117,21 @@ namespace EventManagementSystem.Migrations
                 name: "EVENT",
                 columns: table => new
                 {
-                    EventID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    VenueID = table.Column<int>(type: "INTEGER", nullable: false),
-                    CategoryID = table.Column<int>(type: "INTEGER", nullable: false),
-                    EventName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    EventID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VenueID = table.Column<int>(type: "int", nullable: false),
+                    CategoryID = table.Column<int>(type: "int", nullable: false),
+                    EventName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    EventDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "TEXT", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "TEXT", nullable: false),
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     TicketPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    AvailableSeats = table.Column<int>(type: "INTEGER", nullable: false),
-                    TotalSeats = table.Column<int>(type: "INTEGER", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false, defaultValue: "Upcoming"),
-                    ImageURL = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    AvailableSeats = table.Column<int>(type: "int", nullable: false),
+                    TotalSeats = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, defaultValue: "Upcoming"),
+                    ImageURL = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,15 +154,15 @@ namespace EventManagementSystem.Migrations
                 name: "BOOKING",
                 columns: table => new
                 {
-                    BookingID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MemberID = table.Column<int>(type: "INTEGER", nullable: false),
-                    EventID = table.Column<int>(type: "INTEGER", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TotalTickets = table.Column<int>(type: "INTEGER", nullable: false),
+                    BookingID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MemberID = table.Column<int>(type: "int", nullable: false),
+                    EventID = table.Column<int>(type: "int", nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalTickets = table.Column<int>(type: "int", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false, defaultValue: "Confirmed"),
-                    BookingReference = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, defaultValue: "Confirmed"),
+                    BookingReference = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,14 +185,14 @@ namespace EventManagementSystem.Migrations
                 name: "REVIEW",
                 columns: table => new
                 {
-                    ReviewID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MemberID = table.Column<int>(type: "INTEGER", nullable: false),
-                    EventID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Rating = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReviewID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MemberID = table.Column<int>(type: "int", nullable: false),
+                    EventID = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
-                    ReviewDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsApproved = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false)
+                    ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -215,11 +215,11 @@ namespace EventManagementSystem.Migrations
                 name: "BOOKING_DETAIL",
                 columns: table => new
                 {
-                    DetailID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BookingID = table.Column<int>(type: "INTEGER", nullable: false),
-                    SeatType = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    DetailID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookingID = table.Column<int>(type: "int", nullable: false),
+                    SeatType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Subtotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },

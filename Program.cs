@@ -6,9 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add DbContext with SQLite
+// Add DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        }));
 
 // Add session support
 builder.Services.AddSession(options =>
@@ -23,12 +31,25 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Seed the database
+// Auto-create database and apply migrations
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
-    DbSeeder.SeedData(context);
+    
+    try
+    {
+        // Ensure database is created and all migrations are applied
+        context.Database.Migrate();
+        
+        // Seed data after database is ready
+        DbSeeder.SeedData(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while creating/migrating the database.");
+    }
 }
 
 // Configure the HTTP request pipeline.
